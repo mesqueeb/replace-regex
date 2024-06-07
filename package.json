@@ -4,6 +4,9 @@
   "description": "TS compatible modern nodeJS find-and-replace in files with Regex & Glob support",
   "type": "module",
   "sideEffects": false,
+  "bin": {
+    "replace-regex": "./cli.js"
+  },
   "exports": {
     ".": "./dist/index.js"
   },
@@ -18,12 +21,14 @@
   },
   "dependencies": {
     "fast-glob": "^3.3.2",
-    "is-what": "^5.0.2"
+    "is-what": "^5.0.2",
+    "meow": "^13.2.0"
   },
   "devDependencies": {
     "@cycraft/eslint": "^0.3.0",
     "@cycraft/tsconfig": "^0.1.2",
     "del-cli": "^5.1.0",
+    "execa": "^9.2.0",
     "np": "^10.0.5",
     "vitest": "^1.6.0"
   },

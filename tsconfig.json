@@ -1,6 +1,6 @@
 {
   "extends": "@cycraft/tsconfig",
-  "include": ["src"],
+  "include": ["src", "cli.js"],
   "compilerOptions": {
     "outDir": "dist"
   }

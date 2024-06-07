@@ -1,24 +1,29 @@
 import fastGlob from 'fast-glob'
-import { isFunction, isString } from 'is-what'
+import { isArray, isFunction, isString } from 'is-what'
 import * as fs from 'node:fs/promises'
 
 type MaybeArr<T> = T | T[]
 
 export type ReplaceRegexOptions = {
   files: MaybeArr<string>
-  from: string | RegExp | ((file: string) => string | RegExp)
+  from: string | RegExp | string[] | RegExp[] | ((file: string) => string | RegExp)
   to: string | ((match: string, file: string) => string)
   dry?: boolean
   ignore?: string[]
   disableGlobs?: boolean
   fastGlobOptions?: Parameters<typeof fastGlob>[1]
   countMatches?: boolean
+  /**
+   * when passing a `string` to `from` you can make it ignore case with this flag.
+   * otherwise, you need to embed `i` into your regex
+   */
+  ignoreCase?: boolean
 }
 
 export type ReplaceRegexResult = {
   file: string
-  matchCounts: number
-  replaceCounts: number
+  matchCount: number
+  replaceCount: number
   changed: boolean
 }
 
@@ -43,29 +48,32 @@ async function getPathsAsync(
 function replaceFactory(options: {
   contents: string
   file: string
-  from: ReplaceRegexOptions['from']
+  from: string | RegExp | ((file: string) => string | RegExp)
   to: ReplaceRegexOptions['to']
   countMatches?: ReplaceRegexOptions['countMatches']
+  ignoreCase?: ReplaceRegexOptions['ignoreCase']
 }): {
   result: ReplaceRegexResult
   newContents: string
 } {
-  const { contents, from, to, file, countMatches } = options
+  const { contents, from, to, file, countMatches, ignoreCase } = options
   const result: ReplaceRegexResult = {
     file,
     changed: false,
-    matchCounts: 0,
-    replaceCounts: 0,
+    matchCount: 0,
+    replaceCount: 0,
   }
 
-  const fromRegex = isFunction(from) ? from(file) : isString(from) ? new RegExp(from, 'g') : from
+  const _from = isFunction(from) ? from(file) : from
+  const flags = ignoreCase ? 'gi' : 'g'
+  const fromRegex = isString(_from) ? new RegExp(_from, flags) : _from
 
   if (countMatches) {
     const matches = contents.match(fromRegex)
     if (matches) {
       const replacements = matches.filter((match) => match !== to)
-      result.matchCounts = matches.length
-      result.replaceCounts = replacements.length
+      result.matchCount = matches.length
+      result.replaceCount = replacements.length
     }
   }
 
@@ -84,11 +92,15 @@ function replaceFactory(options: {
 /**
  * async replace string in single file
  */
-async function replaceFileAsync(
-  file: string,
-  options: ReplaceRegexOptions,
-): Promise<ReplaceRegexResult> {
-  const { from, to, dry, countMatches } = options
+async function replaceFileAsync(options: {
+  file: string
+  from: string | RegExp | ((file: string) => string | RegExp)
+  to: ReplaceRegexOptions['to']
+  countMatches: ReplaceRegexOptions['countMatches']
+  dry: ReplaceRegexOptions['dry']
+  ignoreCase?: ReplaceRegexOptions['ignoreCase']
+}): Promise<ReplaceRegexResult> {
+  const { file, from, to, dry, countMatches, ignoreCase } = options
 
   const contents = await fs.readFile(file)
 
@@ -99,6 +111,7 @@ async function replaceFileAsync(
     to,
     file,
     countMatches,
+    ignoreCase,
   })
 
   if (!result.changed || dry) return result
@@ -112,10 +125,21 @@ async function replaceFileAsync(
  * Uses fast-glob to find and replace text in files. Supports RegExp.
  */
 export async function replaceRegex(options: ReplaceRegexOptions): Promise<ReplaceRegexResult[]> {
-  const { files, dry } = options
+  const { files, from, dry, countMatches, to, ignoreCase } = options
   // dry mode, do not replace
-  if (dry) console.warn('[dry mode] no files will be overwritten')
+  if (dry) console.log('[dry mode] no files will be overwritten')
 
   const foundFiles = await getPathsAsync(files, options)
-  return await Promise.all(foundFiles.map((file) => replaceFileAsync(file, options)))
+  const fromClauses: (string | RegExp | ((file: string) => string | RegExp))[] = isArray(from)
+    ? from
+    : [from]
+  const results: Promise<ReplaceRegexResult>[] = []
+
+  for (const from of fromClauses) {
+    for (const file of foundFiles) {
+      results.push(replaceFileAsync({ file, from, to, countMatches, dry, ignoreCase }))
+    }
+  }
+
+  return await Promise.all(results)
 }

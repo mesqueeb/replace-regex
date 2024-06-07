@@ -14,7 +14,7 @@ npm i replace-regex
 - **Glob Support**: Use glob patterns to specify files.
 - **Regex Support**: Replace text using regular expressions.
 - **Dry Run**: Preview changes without modifying files.
-- **Counts**: Count matches and replacements.
+- **Count**: Count matches and replacements.
 - **Customizable**: Pass custom options to fine-tune behavior.
 
 ## Usage
