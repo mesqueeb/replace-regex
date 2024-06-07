@@ -20,7 +20,6 @@ describe('replaceRegex', () => {
       to: 'TEST',
       disableGlobs: false,
       dry: false,
-      countMatches: true,
     }
 
     const results = await replaceRegex(options)
@@ -54,7 +53,6 @@ describe('replaceRegex', () => {
       to: 'TEST',
       disableGlobs: false,
       dry: true,
-      countMatches: true,
     }
 
     const results = await replaceRegex(options)
@@ -89,7 +87,6 @@ describe('replaceRegex', () => {
       to: 'TEST',
       disableGlobs: false,
       dry: false,
-      countMatches: true,
     }
 
     const results = await replaceRegex(options)

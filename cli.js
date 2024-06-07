@@ -14,7 +14,6 @@ const cli = meow(
 	  --to              Replacement string or function (Required)
 	  --dry             Dry run (do not actually replace, just show what would be replaced)
 	  --no-glob         Disable globbing
-	  --count-matches   Count matches and replacements
 	  --ignore          Ignore files matching this pattern (Can be set multiple times)
 	  --ignore-case     Search case-insensitively
 
@@ -41,10 +40,6 @@ const cli = meow(
       glob: {
         type: 'boolean',
         default: true,
-      },
-      countMatches: {
-        type: 'boolean',
-        default: false,
       },
       ignore: {
         type: 'string',
@@ -74,7 +69,6 @@ const replaceOptions = {
   to: cli.flags.to,
   dry: cli.flags.dry,
   disableGlobs: !cli.flags.glob,
-  countMatches: cli.flags.countMatches,
   ignore: cli.flags.ignore,
   ignoreCase: cli.flags.ignoreCase,
 }

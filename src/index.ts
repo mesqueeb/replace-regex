@@ -12,7 +12,6 @@ export type ReplaceRegexOptions = {
   ignore?: string[]
   disableGlobs?: boolean
   fastGlobOptions?: Parameters<typeof fastGlob>[1]
-  countMatches?: boolean
   /**
    * when passing a `string` to `from` you can make it ignore case with this flag.
    * otherwise, you need to embed `i` into your regex
@@ -34,12 +33,12 @@ async function getPathsAsync(
   patterns: MaybeArr<string>,
   options: ReplaceRegexOptions,
 ): Promise<string[]> {
-  const { ignore, disableGlobs, fastGlobOptions: cfg } = options
+  const { ignore, disableGlobs, fastGlobOptions } = options
 
   // disable globs, just ensure file(s) name
   if (disableGlobs) return isString(patterns) ? [patterns] : patterns
 
-  return await fastGlob(patterns, { ignore, ...cfg })
+  return await fastGlob(patterns, { ignore, ...fastGlobOptions })
 }
 
 /**
@@ -50,13 +49,12 @@ function replaceFactory(options: {
   file: string
   from: string | RegExp | ((file: string) => string | RegExp)
   to: ReplaceRegexOptions['to']
-  countMatches?: ReplaceRegexOptions['countMatches']
   ignoreCase?: ReplaceRegexOptions['ignoreCase']
 }): {
   result: ReplaceRegexResult
   newContents: string
 } {
-  const { contents, from, to, file, countMatches, ignoreCase } = options
+  const { contents, from, to, file, ignoreCase } = options
   const result: ReplaceRegexResult = {
     file,
     changed: false,
@@ -68,13 +66,11 @@ function replaceFactory(options: {
   const flags = ignoreCase ? 'gi' : 'g'
   const fromRegex = isString(_from) ? new RegExp(_from, flags) : _from
 
-  if (countMatches) {
-    const matches = contents.match(fromRegex)
-    if (matches) {
-      const replacements = matches.filter((match) => match !== to)
-      result.matchCount = matches.length
-      result.replaceCount = replacements.length
-    }
+  const matches = contents.match(fromRegex)
+  if (matches) {
+    const replacements = matches.filter((match) => match !== to)
+    result.matchCount = matches.length
+    result.replaceCount = replacements.length
   }
 
   const newContents = isFunction(to)
@@ -96,11 +92,10 @@ async function replaceFileAsync(options: {
   file: string
   from: string | RegExp | ((file: string) => string | RegExp)
   to: ReplaceRegexOptions['to']
-  countMatches: ReplaceRegexOptions['countMatches']
   dry: ReplaceRegexOptions['dry']
   ignoreCase?: ReplaceRegexOptions['ignoreCase']
 }): Promise<ReplaceRegexResult> {
-  const { file, from, to, dry, countMatches, ignoreCase } = options
+  const { file, from, to, dry, ignoreCase } = options
 
   const contents = await fs.readFile(file)
 
@@ -110,7 +105,6 @@ async function replaceFileAsync(options: {
     from,
     to,
     file,
-    countMatches,
     ignoreCase,
   })
 
@@ -125,7 +119,7 @@ async function replaceFileAsync(options: {
  * Uses fast-glob to find and replace text in files. Supports RegExp.
  */
 export async function replaceRegex(options: ReplaceRegexOptions): Promise<ReplaceRegexResult[]> {
-  const { files, from, dry, countMatches, to, ignoreCase } = options
+  const { files, from, dry, to, ignoreCase } = options
   // dry mode, do not replace
   if (dry) console.log('[dry mode] no files will be overwritten')
 
@@ -137,7 +131,7 @@ export async function replaceRegex(options: ReplaceRegexOptions): Promise<Replac
 
   for (const from of fromClauses) {
     for (const file of foundFiles) {
-      results.push(replaceFileAsync({ file, from, to, countMatches, dry, ignoreCase }))
+      results.push(replaceFileAsync({ file, from, to, dry, ignoreCase }))
     }
   }
 
