@@ -1,6 +1,6 @@
 {
   "name": "replace-regex",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TS compatible modern nodeJS find-and-replace in files with Regex & Glob support",
   "type": "module",
   "sideEffects": false,
