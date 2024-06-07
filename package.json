@@ -1,0 +1,51 @@
+{
+  "name": "replace-regex",
+  "version": "0.0.0",
+  "description": "TS compatible modern nodeJS find-and-replace in files with Regex & Glob support",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "tsc --noEmit && eslint ./src",
+    "build": "del-cli dist && tsc",
+    "release": "npm run lint && npm run build && np"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2",
+    "is-what": "^5.0.2"
+  },
+  "devDependencies": {
+    "@cycraft/eslint": "^0.3.0",
+    "@cycraft/tsconfig": "^0.1.2",
+    "del-cli": "^5.1.0",
+    "np": "^10.0.5",
+    "vitest": "^1.6.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "replace-in-files",
+    "regex-replacer",
+    "find-and-replace",
+    "file-text-replacer",
+    "replace-text-in-files",
+    "glob-replace-text",
+    "glob-find-and-replace"
+  ],
+  "author": "Luca Ban - Mesqueeb (https://cycraft.co)",
+  "funding": "https://github.com/sponsors/mesqueeb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mesqueeb/replace-regex.git"
+  },
+  "homepage": "https://github.com/mesqueeb/replace-regex#readme",
+  "bugs": "https://github.com/mesqueeb/replace-regex/issues"
+}

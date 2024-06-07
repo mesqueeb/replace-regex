@@ -1,0 +1,7 @@
+{
+  "extends": "@cycraft/tsconfig",
+  "include": ["src"],
+  "compilerOptions": {
+    "outDir": "dist"
+  }
+}
