@@ -17,20 +17,20 @@
     "test": "vitest run",
     "lint": "tsc --noEmit && eslint ./src",
     "build": "del-cli dist && tsc",
-    "release": "npm run lint && npm run build && np"
+    "release": "pnpm run lint && pnpm run build && np"
   },
   "dependencies": {
     "fast-glob": "^3.3.3",
-    "is-what": "^5.2.0",
+    "is-what": "^5.5.0",
     "meow": "^13.2.0"
   },
   "devDependencies": {
-    "@cycraft/eslint": "^0.4.3",
+    "@cycraft/eslint": "^0.4.4",
     "@cycraft/tsconfig": "^0.1.2",
-    "del-cli": "^6.0.0",
-    "execa": "^9.5.2",
+    "del-cli": "^7.0.0",
+    "execa": "^9.6.1",
     "np": "^12.1.1",
-    "vitest": "^3.0.6"
+    "vitest": "^5.0.1"
   },
   "files": [
     "dist",
@@ -53,5 +53,6 @@
     "url": "https://github.com/mesqueeb/replace-regex.git"
   },
   "homepage": "https://github.com/mesqueeb/replace-regex#readme",
-  "bugs": "https://github.com/mesqueeb/replace-regex/issues"
+  "bugs": "https://github.com/mesqueeb/replace-regex/issues",
+  "packageManager": "pnpm@11.27.0"
 }
