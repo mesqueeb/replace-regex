@@ -13,8 +13,8 @@ export type ReplaceRegexOptions = {
   disableGlobs?: boolean
   fastGlobOptions?: Parameters<typeof fastGlob>[1]
   /**
-   * when passing a `string` to `from` you can make it ignore case with this flag.
-   * otherwise, you need to embed `i` into your regex
+   * When passing a `string` to `from` you can make it ignore case with this flag. otherwise, you
+   * need to embed `i` into your regex
    */
   ignoreCase?: boolean
 }
@@ -26,9 +26,7 @@ export type ReplaceRegexResult = {
   changed: boolean
 }
 
-/**
- * async use fast-glob to get all files
- */
+/** Async use fast-glob to get all files */
 async function getPathsAsync(
   patterns: MaybeArr<string>,
   options: ReplaceRegexOptions,
@@ -41,9 +39,7 @@ async function getPathsAsync(
   return await fastGlob(patterns, { ignore, ...fastGlobOptions })
 }
 
-/**
- * replace main
- */
+/** Replace main */
 function replaceFactory(options: {
   contents: string
   file: string
@@ -85,9 +81,7 @@ function replaceFactory(options: {
   }
 }
 
-/**
- * async replace string in single file
- */
+/** Async replace string in single file */
 async function replaceFileAsync(options: {
   file: string
   from: string | RegExp | ((file: string) => string | RegExp)
@@ -115,9 +109,7 @@ async function replaceFileAsync(options: {
   return result
 }
 
-/**
- * Uses fast-glob to find and replace text in files. Supports RegExp.
- */
+/** Uses fast-glob to find and replace text in files. Supports RegExp. */
 export async function replaceRegex(options: ReplaceRegexOptions): Promise<ReplaceRegexResult[]> {
   const { files, from, dry, to, ignoreCase } = options
   // dry mode, do not replace
