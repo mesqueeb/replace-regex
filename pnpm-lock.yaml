@@ -22,8 +22,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       is-what:
-        specifier: ^5.5.2
-        version: 5.5.2
+        specifier: ^5.5.6
+        version: 5.5.6
       meow:
         specifier: ^13.2.0
         version: 13.2.0
@@ -697,8 +697,8 @@ packages:
     resolution: {integrity: sha512-mE00Gnza5EEB3Ds0HfMyllZzbBrmLOX3vfWoj9A9PEnTfratQ/BcaJOuMhnkhjXvb2+FkY3VuHqtAGpTPmglFQ==}
     engines: {node: '>=18'}
 
-  is-what@5.5.2:
-    resolution: {integrity: sha512-NDfDavd2HaG0N/DC/5yQ7q7nrITMgDdrdNk5Y0+8t0u0tTdVdukTiECj/JNXrMhnlIoJGQHZmN7vHuXe0yA5Ig==}
+  is-what@5.5.6:
+    resolution: {integrity: sha512-pqcuDo0zxIlI8D/fwskPl8p3pC7EKXv/7ZjtMBCWU7tSpPDFjY+FR52QYrKHhgRdbZK4iQ1y2KtHypozhR4FHw==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -1892,7 +1892,7 @@ snapshots:
 
   is-unicode-supported@2.1.0: {}
 
-  is-what@5.5.2: {}
+  is-what@5.5.6: {}
 
   isexe@2.0.0: {}
 
